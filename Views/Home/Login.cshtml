@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- nav section -->
+<link href="/css/banner.css" rel="stylesheet" />
+<section class="nav_section">
+    <div class="container">
+        <div class="custom_nav2">
+            <nav class="navbar navbar-expand custom_nav-container ">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex  flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/Home/index">首頁<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/about">關於我們</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/crop">優質小農</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/testimonial">小農推薦</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Farmers/Blog">部落格</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/contact">聯絡我們</a>
+                            </li>
+                            <li class="nav-item">
+                                <img src="~/images/account.jfif" alt="">
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/Login">@TempData["Account"]</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</section>
+<!-- end nav section -->
+<!-- login section -->
+<div class="container">
+    <form method="post" action="/Home/login" class="mt-4">
+        <font size="6">註冊登入</font>
+        <br />
+        <br />
+        <label>會員帳號</label>
+        <br />
+        <input type="text" name="account" class="form-control" placeholder="您的電子信箱" required data-val="true" data-val-number="欄位 ID 必須是數字。" />
+        <div>
+            <span style="color:red">@ViewBag.Msg1</span>
+        </div>
+        <div>
+            <span style="color:red">@ViewBag.Msg2</span>
+        </div>
+        <div>
+            <span style="color:red">@ViewBag.Msg3</span>
+        </div>
+        <br />
+        <br />
+        <label>會員密碼</label>
+        <br />
+        <input type="password" name="passwd" class="form-control" placeholder="8~12位數的密碼組合" required />
+        <div>
+            <span style="color:red">@ViewBag.Msg1</span>
+        </div>
+        <div>
+            <span style="color:red">@ViewBag.Msg4</span>
+        </div>
+        <br />
+        <br />
+        <input type="submit" name="submit" value="登入" class="btn btn-primary" />
+        <br />
+        <br />
+        <a href="/Login/resetPasswd">忘記密碼?</a>
+        @* <p>@Html.ActionLink("忘記密碼?", "resetPasswd")</p> *@
+        <br />
+        <br />
+        <h2>還不是會員?</h2>
+        <br />
+        <a href="/Login/register">註冊會員</a>
+        <br />
+        <br />
+        @* <p>@Html.ActionLink("註冊會員", "register")</p> *@
+    </form>
+</div>
+<!-- end login section -->
+
+
+
+
+@*<div style="text-align:center;vertical-align:middle;"> 此為將文本置中
+
+    </div>*@
+
+
+@*以下為回傳訊息的必須指令*@
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Serialize(TempData["Message"]));
+        @* 專案類型"ASP.NET CORE WEB 應用程式(MVC)" 的用Json.Serialize; "ASP.NET WEB 應用程式(.NET Framework)" 的用Json.Encode *@
+            alert(message);
+    </script>
+}

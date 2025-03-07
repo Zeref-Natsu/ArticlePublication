@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Farmer_Project.Models.Entity
+@model List<Articles>
+
+<!-- nav section -->
+
+<section class="nav_section">
+    <div class="container">
+        <div class="custom_nav2">
+            <nav class="navbar navbar-expand custom_nav-container ">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex  flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/index">全部</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/testimonial">主題相關</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/MyArticle">我的文章</a>
+                            </li>
+                            <li class="nav-item">
+                                <img src="~/images/account.jfif" alt="">
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@TempData["Account_Ref"]">@TempData["Account"]</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<div style="text-align:center;vertical-align:middle;">
+    <br />
+    <input type="submit" name="submit" value="我要發表" class="btn btn-primary" />
+</div>

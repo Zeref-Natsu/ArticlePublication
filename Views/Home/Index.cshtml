@@ -1,9 +1,13 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using Farmer_Project.Models.Entity
+@model List<Articles>
+
+
 
 <!-- nav section -->
-<link href="/css/banner.css" rel="stylesheet" />
+
 <section class="nav_section">
     <div class="container">
         <div class="custom_nav2">
@@ -15,17 +19,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="d-flex  flex-column flex-lg-row align-items-center">
                         <ul class="navbar-nav  ">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="@TempData["Login"]">首頁<span class="sr-only">(current)</span></a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/index">全部</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/Home/about">全部</a>
+                                <a class="nav-link" href="/Home/testimonial">主題相關</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/Home/crop">主題相關</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Home/testimonial">我的文章</a>
+                                <a class="nav-link" href="/Home/MyArticle">我的文章</a>
                             </li>
                             <li class="nav-item">
                                 <img src="~/images/account.jfif" alt="">
@@ -40,6 +41,161 @@
         </div>
     </div>
 </section>
+
+<br />
+<div id="data-container" style="text-align:center;vertical-align:middle;">
+    <table class="BH-table BH-table1">
+        <tbody>
+            <tr>
+                <td width="20" align="center">
+                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                </td>
+                <td width="35" align="center">1</td>
+                <td width="20" align="center">
+                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                </td>
+                <td width ="400">
+                    <h1>
+                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                            魔物獵人 系列
+                        </a>
+                    </h1>
+                </td>
+                <td width="600">
+                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                        【閒聊】沒人意識到這次荒野主線發生的事情非常糟糕甚至惡劣嗎？
+                    </a>
+                    <br>
+                    <small>板主：su770321</small>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="data-container" style="text-align:center;vertical-align:middle;">
+    <table class="BH-table BH-table1">
+        <tbody>
+            <tr>
+                <td width="20" align="center">
+                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                </td>
+                <td width="35" align="center">2</td>
+                <td width="20" align="center">
+                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                </td>
+                <td width="400">
+                    <h1>
+                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                            魔物獵人 系列
+                        </a>
+                    </h1>
+                </td>
+                <td width="600">
+                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                        【閒聊】沒人意識到這次荒野主線發生的事情非常糟糕甚至惡劣嗎？
+                    </a>
+                    <br>
+                    <small>板主：su770321</small>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+@* <div id="data-container">
+    <div class="forum_list">
+        <div class="fourm_list_pic">
+            <a data-gtm-type="宅生活" data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="https://forum.gamer.com.tw/A.php?bsn=60030">
+                <img src="https://i2.bahamut.com.tw/forum/welcome.png" data-srcset="https://p2.bahamut.com.tw/FORUM/welcome/60030_3_1739554657.JPG?w=720 1x,https://p2.bahamut.com.tw/FORUM/welcome/60030_3_1739554657.JPG 2x" class=" lazyloaded" srcset="https://p2.bahamut.com.tw/FORUM/welcome/60030_3_1739554657.JPG?w=720 1x,https://p2.bahamut.com.tw/FORUM/welcome/60030_3_1739554657.JPG 2x">
+            </a>
+        </div>
+        <div class="forum_list_info">
+            <div class="forum_list_title">
+                <span style="background: #f26338;">1</span>
+                <span>
+                    <a data-gtm-type="宅生活" data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=60030">電腦應用綜合討論 </a>
+                </span>
+            </div>
+        <div class="forum_arrow forum_stop">⎯</div>
+        <p>
+            <a data-gtm-type="宅生活" data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=60030&amp;snA=663523">【心得】臭打遊戲的好選擇 技嘉AORUS RX 9070XT ELITE 16G 開箱</a>
+        </p>
+        <i>板主：gary830105
+            <i class="fa fa-fire" aria-hidden="true" title="昨日人氣"></i>
+            630104
+            <i class="fa fa-file-text-o" aria-hidden="true" title="昨日文章"></i>
+            284
+        </i>    
+        </div>
+    </div>
+</div> *@
+
+
 <!-- end nav section -->
 
+@* <section class="fruit_section layout_padding">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-7 col-xl-8 mt-0">
+                @foreach (var article in Model)
+                {
+                    <div class="cus_bg_color p-4 rounded mb-3 cus_hover">
+                        <div class="row g-4 align-items-center ">
+                            <div class="col-md-6">
+                                <div class="rounded overflow-hidden">
+                                    <img src="@article.ArticleImagePath" class="img-fluid rounded img-zoomin w-100" alt="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex flex-column">
+                                    <a href="/Farmers/Articles/@article.Id/@article.ArticlesId" class="h3 cus_aText_hover">@article.ArticleTitle</a>
+                                    <p class="mb-0 fs-5">
+                                        @if (article.ArticleSummary.Length > 60)
+                                        {
+                                            @(article.ArticleSummary.Substring(0, 60) + "...")
+                                        }
+                                        else
+                                        {
+                                            @article.ArticleSummary
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
 
+
+            <div class="col-lg-5 col-xl-4">
+                <div class="bg-light rounded p-4 pt-0">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <h3>文章標籤</h3>
+                            <div class="row">
+                                <div class="col-4 mb-2">
+                                    <a href="/Farmers/Blog/Coffee" class="btn btn-warning rounded-5 w-100">
+                                        Coffee
+                                    </a>
+                                </div>
+                                <div class="col-4 mb-2">
+                                    <a href="/Farmers/Blog/Mango" class="btn btn-warning rounded-5 w-100">
+                                        Mango
+                                    </a>
+                                </div>
+                                <div class="col-4 mb-2">
+                                    <a href="/Farmers/Blog/All" class="btn btn-warning rounded-5 w-100">
+                                        All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> *@
