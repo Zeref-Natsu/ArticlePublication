@@ -5,26 +5,13 @@ namespace Farmer_Project.Models.Entity
 {
     public class Articles
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ArticlesId { set; get; }
-
-        [ForeignKey("FarmersInfo")]
-        public int? Id { set; get; }
-    
-        [StringLength(15)]
+        public int Number { set; get; }
+        public string Author { set; get; }
         public string ArticleType { set; get; }
-
-        [MaxLength(100)]
-        public string ArticleTitle { get; set; }
-
-        [StringLength(50)]
+        public string Article { get; set; }
         public string ArticleImagePath { set; get; }
-
         public string ArticleSummary { set; get; }
-
         public bool IsPublished { set; get; } = false;
-
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         //導覽屬性(一對"多")

@@ -1,13 +1,17 @@
+using System;
 using System.Diagnostics;
+using System.Security.Principal;
+using Farmer_Project.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
 using 文章寫作平台.Models;
+using 文章寫作平台.Models.Entity;
 
 namespace 文章寫作平台.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly string connStr = "Data Source=(localdb)\\MSSQLLocalDB;Database=account;User ID=LAPTOP-G5P63730\\KEN;Trusted_Connection=True";
+        
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -19,9 +23,10 @@ namespace 文章寫作平台.Controllers
             TempData["Account"] = "未登入";  // 顯示是否有登入，有的話顯示登入的帳號
             TempData["Account_Ref"] = "/Home/login";   // 設定 "登入" 連結的路徑
 
-            //TempData["isLogin1"] = "生活";
-            //TempData["isLogin2"] = "娛樂";
-            //TempData["isLogin3"] = "企業";
+            //DBmanager dbmanager = new DBmanager();
+            //List<Articles> Articles = dbmanager.getArticles();
+            //ViewBag.Articles = Articles;
+
             TempData.Keep();  // 用於讓 TempData 的值保存不刪除
             return View();
         }
@@ -37,6 +42,46 @@ namespace 文章寫作平台.Controllers
             //TempData["isLogin3"] = "企業";
             TempData.Keep();  // 用於讓 TempData 的值保存不刪除
             return View();
+        }
+
+
+
+        [HttpGet]
+        public IActionResult ArticleAdd()
+        {
+            ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
+            TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
+            TempData["Account_Ref"] = TempData["Account_Ref"];
+
+            
+
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ArticleAdd(Articles author, string action)
+        {
+            ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
+            TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
+            TempData["Account_Ref"] = TempData["Account_Ref"];
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
+
+            //判斷: "true":發佈 / "false":保存
+            bool isPublish = action == "true";
+
+            DBmanager dbmanager = new DBmanager();
+            int ArticlesCount = dbmanager.getArticles();  // 此用於得到資料數量
+
+            try
+            {
+                dbmanager.newArticles(author, isPublish, ArticlesCount);   // 此為啟動DBmanager當中的newAccount指令
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return RedirectToAction("MyArticle");  // 此設定為導回 "MyArticle" 的網頁
         }
 
         public IActionResult Login()
