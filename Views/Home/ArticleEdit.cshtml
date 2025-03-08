@@ -1,6 +1,7 @@
 ﻿@* 最上面的版面配置 *@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Articles> Articles = ViewBag.Articles;  //將Controller當中控制此頁面的function，之中的Articles放入於此，用於資料表的資料迴圈抓取
 }
 
 @using Farmer_Project.Models.Entity
@@ -56,22 +57,23 @@
             <h2 style="text-align:center;vertical-align:middle;"> 新增文章 </h2>
             <hr />
 
-            <form class="form rounded" asp-action="ArticleAdd" method="post" enctype="multipart/form-data">
+            <form class="form rounded" asp-action="ArticleEdit" method="post" enctype="multipart/form-data">
                 <div class="rounded-3 bg-light p-3 shadow mb-3">
                     <input type="hidden" name="FarmersId" value="" />
+                    @foreach (var author in Articles)
+                    {
+                        <!-- 文章標題 -->
+                        <div class="mb-3">
+                            <label for="Articles.ArticleTitle" class="form-label">文章標題</label>
+                            <input type="text" class="form-control" name="Article" value="@author.Article">
+                        </div>
 
-                    <!-- 文章標題 -->
-                    <div class="mb-3">
-                        <label for="Articles.ArticleTitle" class="form-label">文章標題</label>
-                        <input type="text" class="form-control" name="Article">
-                    </div>
-
-                    <!-- 文章類型 -->
-                    <div class="mb-3">
-                        <label for="Articles.ArticleTitle" class="form-label">文章類型</label>
-                        <input type="text" class="form-control" name="ArticleType">
-                    </div>
-                    @* <div class="mb-3">
+                        <!-- 文章類型 -->
+                        <div class="mb-3">
+                            <label for="Articles.ArticleTitle" class="form-label">文章類型</label>
+                            <input type="text" class="form-control" name="ArticleType" value="@author.ArticleType">
+                        </div>
+                        @* <div class="mb-3">
                         <label for="Articles.ArticleType" class="form-label">文章類型</label>
                         <select class="form-select" name="ArticleType">
                             <option value="" selected>-- 請選擇 --</option>
@@ -80,37 +82,25 @@
                         </select>
                     </div> *@
 
-                    <!-- 文章圖片 -->
-                    <div class="mb-3">
-                        <label for="Articles.ArticleImage" class="form-label">文章圖片</label>
-                        <input type="file" class="form-control" name="ArticleImagePath">
-                    </div>
+                        <!-- 文章圖片 -->
+                        <div class="mb-3">
+                            <label for="Articles.ArticleImage" class="form-label">文章圖片</label>
+                            <input type="file" class="form-control" name="ArticleImagePath" value="@author.ArticleImagePath">
+                        </div>
 
-                    <!-- 文章簡介 -->
-                    <div class="mb-3">
-                        <label for="Articles.ArticleSummary" class="form-label">文章簡介</label>
-                        <textarea class="form-control" name="ArticleSummary" rows="8"></textarea>
-                    </div>
+                        <!-- 文章簡介 -->
+                        <div class="mb-3">
+                            <label for="Articles.ArticleSummary" class="form-label">文章簡介</label>
+                            <textarea class="form-control" name="ArticleSummary" rows="8">@author.ArticleSummary</textarea>
+                        </div>
+                    }
+                    
                 </div>
                 <hr>
 
-                <!-- 添加和減少段落 -->
-                <div>
-                    <p><i id="addParagraphs" class="fa-solid fa-plus" style="cursor:pointer;"> 新增段落</i></p>
-                    <p><i id="removeParagraphs" class="fa-solid fa-minus" style="cursor:pointer;"> 減少段落</i></p>
-                </div>
+                <br />
 
-                <hr>
-
-                <!-- 保存與送出按鈕 -->
-                <div class="d-flex">
-                    <div class="me-2">
-                        <button type="submit" class="btn btn-primary" name="action" value="false">保存</button>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary" name="action" value="true">發佈</button>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary">更新</button>
 
             </form>
 

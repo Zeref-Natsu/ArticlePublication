@@ -73,7 +73,7 @@
                         </td>
                         <td width="10" align="left">
                             <!-- 編輯操作 -->
-                            <button type="submit" name="action" value="edit" class="btn btn-sm btn-warning" formaction="@Url.Action("MyArticle", "Home", new { id = author.Number })">編輯</button>
+                            <button type="submit" name="action" value="edit" class="btn btn-sm btn-warning" formaction="@Url.Action("ArticleEdit", "Home", new { id = author.Number })">編輯</button>
 
                             <!-- 刪除操作 -->
                             <button type="submit" class="btn btn-sm btn-danger delete-btn" formaction="@Url.Action("Delete", "Home", new { id = author.Number })">刪除</button>

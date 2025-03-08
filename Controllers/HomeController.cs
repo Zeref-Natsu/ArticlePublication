@@ -90,6 +90,29 @@ namespace 文章寫作平台.Controllers
             return RedirectToAction("MyArticle");  // 此設定為導回 "MyArticle" 的網頁
         }
 
+        // 編輯方法
+        public IActionResult ArticleEdit(int id)
+        {
+            ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
+            TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
+            TempData["Account_Ref"] = TempData["Account_Ref"];
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
+
+            DBmanager dbmanager = new DBmanager();
+            List<Articles> Articles = dbmanager.EditMyArticles(id);
+            ViewBag.Articles = Articles;
+
+            return View(Articles);
+        }
+
+        [HttpPost]
+        public IActionResult Update(int Article, string nickName, string passwd)
+        {
+
+            return RedirectToAction("MyArticle");
+        }
+
+
         // 刪除方法
         [HttpPost]
         public ActionResult Delete(int id)
