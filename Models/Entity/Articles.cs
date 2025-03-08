@@ -11,7 +11,7 @@ namespace Farmer_Project.Models.Entity
         public string Article { get; set; }
         public string ArticleImagePath { set; get; }
         public string ArticleSummary { set; get; }
-        public bool IsPublished { set; get; } = false;
+        public string IsPublished { set; get; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         //導覽屬性(一對"多")

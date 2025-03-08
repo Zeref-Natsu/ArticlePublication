@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Articles> Articles = ViewBag.Articles;  //將Controller當中控制此頁面的function，之中的Articles放入於此，用於資料表的資料迴圈抓取
 }
 @using Farmer_Project.Models.Entity
 @model List<Articles>
@@ -42,63 +43,35 @@
     </div>
 </section>
 
-<br />
-<div id="data-container" style="text-align:center;vertical-align:middle;">
-    <table class="BH-table BH-table1">
+<div class="text-center">
+    <table class="table">
         <tbody>
-            <tr>
-                <td width="20" align="center">
-                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                </td>
-                <td width="35" align="center">1</td>
-                <td width="20" align="center">
-                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                </td>
-                <td width ="400">
-                    <h1>
-                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
-                            魔物獵人 系列
+            @foreach (Articles author in Articles)
+            {
+                <tr>
+                    <td width="5" align="left">
+                        <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                    </td>
+                    <td width="10" align="left">@author.Number</td>
+                    <td width="5" align="left">
+                        <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                    </td>
+                    <td width="500" align="center">
+                        <h1>
+                            <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                                @author.Article
+                            </a>
+                        </h1>
+                    </td>
+                    <td width="1000" align="left">
+                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                            【@author.ArticleType】@author.ArticleSummary
                         </a>
-                    </h1>
-                </td>
-                <td width="600">
-                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
-                        【閒聊】沒人意識到這次荒野主線發生的事情非常糟糕甚至惡劣嗎？
-                    </a>
-                    <br>
-                    <small>板主：su770321</small>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div id="data-container" style="text-align:center;vertical-align:middle;">
-    <table class="BH-table BH-table1">
-        <tbody>
-            <tr>
-                <td width="20" align="center">
-                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                </td>
-                <td width="35" align="center">2</td>
-                <td width="20" align="center">
-                    <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                </td>
-                <td width="400">
-                    <h1>
-                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
-                            魔物獵人 系列
-                        </a>
-                    </h1>
-                </td>
-                <td width="600">
-                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
-                        【閒聊】沒人意識到這次荒野主線發生的事情非常糟糕甚至惡劣嗎？
-                    </a>
-                    <br>
-                    <small>板主：su770321</small>
-                </td>
-            </tr>
+                        <br>
+                        <small>板主：@author.Author</small>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

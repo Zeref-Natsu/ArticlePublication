@@ -23,9 +23,11 @@ namespace 文章寫作平台.Controllers
             TempData["Account"] = "未登入";  // 顯示是否有登入，有的話顯示登入的帳號
             TempData["Account_Ref"] = "/Home/login";   // 設定 "登入" 連結的路徑
 
-            //DBmanager dbmanager = new DBmanager();
-            //List<Articles> Articles = dbmanager.getArticles();
-            //ViewBag.Articles = Articles;
+            // 抓取已儲存於資料庫的文章資料
+            DBmanager dbmanager = new DBmanager();
+            List<Articles> Articles = dbmanager.getArticles();
+            ViewBag.Articles = Articles;
+            // 完成
 
             TempData.Keep();  // 用於讓 TempData 的值保存不刪除
             return View();
@@ -37,6 +39,10 @@ namespace 文章寫作平台.Controllers
             TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
             TempData["Account_Ref"] = TempData["Account_Ref"];
 
+            DBmanager dbmanager = new DBmanager();
+            List<Articles> Articles = dbmanager.getMyArticles();
+            ViewBag.Articles = Articles;
+
             //TempData["isLogin1"] = "生活";
             //TempData["isLogin2"] = "娛樂";
             //TempData["isLogin3"] = "企業";
@@ -45,7 +51,7 @@ namespace 文章寫作平台.Controllers
         }
 
 
-
+        // 以下兩個為新增文章評論
         [HttpGet]
         public IActionResult ArticleAdd()
         {
@@ -71,17 +77,39 @@ namespace 文章寫作平台.Controllers
             bool isPublish = action == "true";
 
             DBmanager dbmanager = new DBmanager();
-            int ArticlesCount = dbmanager.getArticles();  // 此用於得到資料數量
+            int ArticlesCount = dbmanager.getArticlesCount();  // 此用於得到資料數量
 
             try
             {
-                dbmanager.newArticles(author, isPublish, ArticlesCount);   // 此為啟動DBmanager當中的newAccount指令
+                dbmanager.AddMyArticles(author, isPublish, ArticlesCount);   // 此為啟動DBmanager當中的newAccount指令
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
             return RedirectToAction("MyArticle");  // 此設定為導回 "MyArticle" 的網頁
+        }
+
+        // 刪除方法
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            DBmanager dbmanager = new DBmanager();
+            dbmanager.DeleteMyArticles(id);  // 此用於對 DBmanager 的 DeleteMyArticles 下達刪除指令
+
+            return RedirectToAction("MyArticle", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult ReloadData()
+        {
+            // 重新抓取所有會員資料
+            DBmanager dbmanager = new DBmanager();
+            List<Articles> Articles = dbmanager.getMyArticles();
+            ViewBag.Articles = Articles;
+
+            
+            return RedirectToAction("MyArticle", "Home", Articles);
         }
 
         public IActionResult Login()

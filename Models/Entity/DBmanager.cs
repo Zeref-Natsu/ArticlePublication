@@ -9,12 +9,48 @@ namespace 文章寫作平台.Models.Entity
         private readonly string connStr = "Data Source=(localdb)\\MSSQLLocalDB;Database=Article;User ID=LAPTOP-G5P63730\\KEN;Trusted_Connection=True";
         int ArticlesCount;
 
-        public int getArticles()
+        // 抓取所有已有且公開的文章評論資訊
+        public List<Articles> getArticles()
+        {
+            List<Articles> Articles = new List<Articles>();
+            SqlConnection sqlConnection = new SqlConnection(connStr);
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM WebArticle where IsPublished='Public' order by Number asc");
+            sqlCommand.Connection = sqlConnection;
+            sqlConnection.Open();
+
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Articles Article = new Articles
+                    {
+                        Number = reader.GetInt32(reader.GetOrdinal("Number")),   // 這個欄位的屬性要設定為"int"
+                        Author = reader.GetString(reader.GetOrdinal("Author")),
+                        Article = reader.GetString(reader.GetOrdinal("Article")),
+                        ArticleType = reader.GetString(reader.GetOrdinal("ArticleType")),
+                        ArticleImagePath = reader.GetString(reader.GetOrdinal("ArticleImagePath")),
+                        ArticleSummary = reader.GetString(reader.GetOrdinal("ArticleSummary")),
+                    };
+                    Articles.Add(Article);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("資料庫為空！");
+            }
+            sqlConnection.Close();
+            return Articles;
+        }
+
+        // 用於計算現有的資料數量
+        public int getArticlesCount()
         {
             ArticlesCount = 0;
             
             SqlConnection sqlConnection = new SqlConnection(connStr);
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM WebArticle");
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM WebArticle order by Number asc");
             sqlCommand.Connection = sqlConnection;
             sqlConnection.Open();
 
@@ -34,15 +70,54 @@ namespace 文章寫作平台.Models.Entity
             return ArticlesCount;
         }
 
-        public void newArticles(Articles author, bool isPublish, int ArticlesCount)
+        // 抓取自己的文章
+        public List<Articles> getMyArticles()
+        {
+            List<Articles> Articles = new List<Articles>();
+            SqlConnection sqlConnection = new SqlConnection(connStr);
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM WebArticle where Author='KEN' order by Number asc");
+            sqlCommand.Connection = sqlConnection;
+            sqlConnection.Open();
+
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Articles Article = new Articles
+                    {
+                        Number = reader.GetInt32(reader.GetOrdinal("Number")),   // 這個欄位的屬性要設定為"int"
+                        Author = reader.GetString(reader.GetOrdinal("Author")),
+                        Article = reader.GetString(reader.GetOrdinal("Article")),
+                        ArticleType = reader.GetString(reader.GetOrdinal("ArticleType")),
+                        ArticleImagePath = reader.GetString(reader.GetOrdinal("ArticleImagePath")),
+                        ArticleSummary = reader.GetString(reader.GetOrdinal("ArticleSummary")),
+                        IsPublished = reader.GetString(reader.GetOrdinal("IsPublished")),
+                    };
+                    Articles.Add(Article);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("資料庫為空！");
+            }
+            sqlConnection.Close();
+            return Articles;
+        }
+
+
+
+        // 新增自己的文章評論
+        public void AddMyArticles(Articles author, bool isPublish, int ArticlesCount)
         {
             SqlConnection sqlconnection = new SqlConnection(connStr);
-            SqlCommand sqlcommand = new SqlCommand($@"INSERT INTO WebArticle(Number,Author,Article,ArticleType,ArticleImagePath,ArticleSummary,IsPublished,CreatedDate) VALUES(@Number,@Author,@Article,N'{author.ArticleType}',@ArticleImagePath,N'{author.ArticleSummary}',@IsPublished,@CreatedDate)");
+            SqlCommand sqlcommand = new SqlCommand($@"INSERT INTO WebArticle(Number,Author,Article,ArticleType,ArticleImagePath,ArticleSummary,IsPublished,CreatedDate) VALUES(@Number,@Author,N'{author.Article}',N'{author.ArticleType}',@ArticleImagePath,N'{author.ArticleSummary}',@IsPublished,@CreatedDate)");
             sqlcommand.Connection = sqlconnection;
 
             sqlcommand.Parameters.Add(new SqlParameter("@Number", ArticlesCount + 1));
             sqlcommand.Parameters.Add(new SqlParameter("@Author", "KEN"));
-            sqlcommand.Parameters.Add(new SqlParameter("@Article", "test"));
+            //sqlcommand.Parameters.Add(new SqlParameter("@Article", "test"));
             //sqlcommand.Parameters.Add(new SqlParameter("@ArticleType", author.ArticleType));
             sqlcommand.Parameters.Add(new SqlParameter("@ArticleImagePath", ""));
             //sqlcommand.Parameters.Add(new SqlParameter("@ArticleSummary", author.ArticleSummary));
@@ -58,6 +133,18 @@ namespace 文章寫作平台.Models.Entity
             sqlcommand.Parameters.Add(new SqlParameter("@CreatedDate", ""));
 
             sqlconnection.Open();
+            sqlcommand.ExecuteNonQuery();
+            sqlconnection.Close();
+        }
+
+        // 刪除自己的評論
+        public void DeleteMyArticles(int Number)
+        {
+            SqlConnection sqlconnection = new SqlConnection(connStr);
+            SqlCommand sqlcommand = new SqlCommand($@"DELETE FROM WebArticle WHERE Number={Number}");
+            sqlcommand.Connection = sqlconnection;
+            sqlconnection.Open();
+
             sqlcommand.ExecuteNonQuery();
             sqlconnection.Close();
         }

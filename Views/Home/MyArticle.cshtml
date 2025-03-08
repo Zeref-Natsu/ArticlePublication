@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Articles> Articles = ViewBag.Articles;
 }
 @using Farmer_Project.Models.Entity
 @model List<Articles>
@@ -39,6 +40,52 @@
         </div>
     </div>
 </section>
+
+<div class="text-center">
+    <form method="post" action="@Url.Action("ReloadData", "Home")">  @* 若沒有這一行指令，下方的按鈕網址就無法執行 *@
+        <table class="table table-striped">
+            <tbody>
+                @foreach (var author in Articles)
+                {
+                    <tr>
+                        <td width="5" align="left">
+                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                        </td>
+                        <td width="10" align="left">@author.Number</td>
+                        <td width="5" align="left">
+                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                        </td>
+                        <td width="500" align="center">
+                            <h1>
+                                <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                                    @author.Article
+                                </a>
+                            </h1>
+                        </td>
+                        <td width="800" align="left">
+                            <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                                【@author.ArticleType】@author.ArticleSummary
+                            </a>
+                            <br>
+                            <small>板主：@author.Author</small>
+                            <br>
+                            <small>@author.IsPublished</small>
+                        </td>
+                        <td width="10" align="left">
+                            <!-- 編輯操作 -->
+                            <button type="submit" name="action" value="edit" class="btn btn-sm btn-warning" formaction="@Url.Action("MyArticle", "Home", new { id = author.Number })">編輯</button>
+
+                            <!-- 刪除操作 -->
+                            <button type="submit" class="btn btn-sm btn-danger delete-btn" formaction="@Url.Action("Delete", "Home", new { id = author.Number })">刪除</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+    
+</div>
+
 
 <div style="text-align:center;vertical-align:middle;">
     <br />
