@@ -124,6 +124,12 @@ namespace 文章寫作平台.Controllers
         [HttpPost]
         public IActionResult Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished)
         {
+            if (IsPublished != "Public" || IsPublished != "Private")
+            {
+                ViewBag.Msg1 = "必須選擇";
+            }
+
+
             DBmanager dbmanager = new DBmanager();
             dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary, IsPublished);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
 

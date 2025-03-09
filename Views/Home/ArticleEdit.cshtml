@@ -100,11 +100,14 @@
                         <!-- 私人或公開 -->
                         <div class="mb-3">
                             <label for="Articles.ArticleSummary" class="form-label">文章狀態</label>
-                            <select class="form-select" name="IsPublished" value="@author.IsPublished">
+                            <select class="form-select" name="IsPublished" value="@author.IsPublished" required>
                                 <option value="" selected>-- 請選擇 --</option>
                                 <option value="Public">Public</option>
                                 <option value="Private">Private</option>
                             </select>
+                            <div>
+                                <span style="color:red">@ViewBag.Msg1</span>
+                            </div>
                             @* <input type="text" class="form-control" name="IsPublished" value="@author.IsPublished"> *@
                         </div>
                     }

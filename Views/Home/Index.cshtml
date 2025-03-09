@@ -71,7 +71,15 @@
                         </td>
                         <td width="1000" align="left">
                             <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
-                                【@author.ArticleType】@author.ArticleSummary
+                                【@author.ArticleType】
+                                @if (author.ArticleSummary.Length > 60)
+                                {
+                                    @(author.ArticleSummary.Substring(0, 60) + "...")
+                                }
+                                else
+                                {
+                                    @author.ArticleSummary
+                                }
                             </a>
                             <br>
                             <small>板主：@author.Author</small>
