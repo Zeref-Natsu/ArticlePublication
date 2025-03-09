@@ -1,0 +1,85 @@
+﻿@* 最上面的版面配置 *@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- nav section -->
+<link href="/css/banner.css" rel="stylesheet" />
+<section class="nav_section">
+    <div class="container">
+        <div class="custom_nav2">
+            <nav class="navbar navbar-expand custom_nav-container ">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex  flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/index">全部</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/testimonial">主題相關</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/MyArticle">我的文章</a>
+                            </li>
+                            <li class="nav-item">
+                                <img src="~/images/account.jfif" alt="">
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@TempData["Account_Ref"]">@TempData["Account"]</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</section>
+<!-- end nav section -->
+
+
+<div class="container">
+    <form method="post" action="/Login/register">
+        <br />
+        <h2>會員註冊</h2>
+        <br />
+        <label>*會員暱稱</label>
+        <br />
+        <input type="text" id="inputUserName" name="nickname" class="form-control" placeholder="建議不要使用真實姓名"/>  @*這裡的name可以設定後面*@
+        <div>
+            <span style="color:red">@ViewBag.Msg1</span>
+        </div>
+        <br /><br />
+        <label>*會員帳號</label>
+        <br />
+        <input type="text" id="inputUserAccount" name="account" class="form-control" placeholder="使用您的電子信箱" />
+        <div>
+            <span style="color:red">@ViewBag.Msg2</span>
+        </div>
+        <br /><br />
+        <label>*會員密碼</label>
+        <br />
+        <input type="text" id="inputUserPasswd" name="passwd" class="form-control" placeholder="輸入8~12位數的密碼組合" />
+        <div>
+            <span style="color:red">@ViewBag.Msg3</span>
+        </div>
+        <br /><br />
+        @*<label>*再次輸入密碼</label>
+            <br />
+            <input type="text" name="passwd2" />
+            <br /><br />*@
+        <input type="submit" name="submit" value="註冊" class="btn btn-primary" />
+    </form>
+</div>
+
+@*以下為回傳訊息的必須指令*@
+@* @if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+} *@

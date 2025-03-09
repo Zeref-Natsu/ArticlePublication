@@ -20,8 +20,18 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// 客製化路由
+app.MapControllerRoute(
+    name: "farmersArticles",
+    pattern: "Home/ArticleContent/{Number}",
+    defaults: new { controller = "Home", action = "ArticleContent" });
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{action=index}/{id?}");
 
 app.Run();

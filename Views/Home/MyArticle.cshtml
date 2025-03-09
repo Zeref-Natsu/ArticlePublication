@@ -46,7 +46,7 @@
 </section>
 
 <div class="text-center">
-    <form method="post" action="@Url.Action("ReloadData", "Home")">  @* 若沒有這一行指令，下方的按鈕網址就無法執行 *@
+    <form method="post" >  @* 若沒有這一行指令，下方的按鈕網址就無法執行 *@
         <table class="table table-striped">
             <tbody>
                 @if (Articles.Any())
@@ -63,13 +63,13 @@
                             </td>
                             <td width="500" align="center">
                                 <h1>
-                                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                                    <a href="/Home/ArticleContent/@author.Number">
                                         @author.Article
                                     </a>
                                 </h1>
                             </td>
                             <td width="800" align="left">
-                                <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                                <a href="/Home/ArticleContent/@author.Number">
                                     【@author.ArticleType】
                                     @if (author.ArticleSummary.Length > 60)
                                     {
@@ -106,11 +106,11 @@
             </tbody>
         </table>
     </form>
-    
+    <div style="text-align:center;vertical-align:middle;">
+        <br />
+        <a class="nav-link" href="/Home/ArticleAdd">我要發表</a>
+    </div>
 </div>
 
 
-<div style="text-align:center;vertical-align:middle;">
-    <br />
-    <a class="nav-link" href="/Home/ArticleAdd">我要發表</a>
-</div>
+
