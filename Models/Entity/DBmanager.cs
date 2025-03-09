@@ -174,10 +174,10 @@ namespace 文章寫作平台.Models.Entity
             return Articles;
         }
         // 2. 最後將現在的資料更新至資料表
-        public void UpdateMyArticles(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary)
+        public void UpdateMyArticles(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished)
         {
             SqlConnection sqlconnection = new SqlConnection(connStr);
-            SqlCommand sqlcommand = new SqlCommand($@"Update WebArticle SET Article=N'{Article}', ArticleType=N'{ArticleType}', ArticleImagePath=N'{ArticleImagePath}', ArticleSummary=N'{ArticleSummary}' where Author='KEN' and Number={Number}");
+            SqlCommand sqlcommand = new SqlCommand($@"Update WebArticle SET Article=N'{Article}', ArticleType=N'{ArticleType}', ArticleImagePath=N'{ArticleImagePath}', ArticleSummary=N'{ArticleSummary}', IsPublished=N'{IsPublished}' where Author='KEN' and Number={Number}");
             sqlcommand.Connection = sqlconnection;
             sqlconnection.Open();
 

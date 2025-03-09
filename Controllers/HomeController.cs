@@ -106,10 +106,10 @@ namespace 文章寫作平台.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary)
+        public IActionResult Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished)
         {
             DBmanager dbmanager = new DBmanager();
-            dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
+            dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary, IsPublished);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
 
             return RedirectToAction("MyArticle");
         }

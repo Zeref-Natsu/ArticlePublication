@@ -57,7 +57,7 @@
             <h2 style="text-align:center;vertical-align:middle;"> 編輯文章 </h2>
             <hr />
 
-            <form method="post" action="@Url.Action("Update", "Home")">
+            <form method="post" action="@Url.Action("Update", "Home")">   @* 這裡可以將以下的資料上報到HomeController的Update *@
                 <div class="rounded-3 bg-light p-3 shadow mb-3">
                     <input type="hidden" name="FarmersId" value="" />
                     @foreach (var author in Articles)
@@ -96,6 +96,16 @@
                         <div class="mb-3">
                             <label for="Articles.ArticleSummary" class="form-label">文章簡介</label>
                             <textarea class="form-control" name="ArticleSummary" rows="8">@author.ArticleSummary</textarea>
+                        </div>
+                        <!-- 私人或公開 -->
+                        <div class="mb-3">
+                            <label for="Articles.ArticleSummary" class="form-label">文章狀態</label>
+                            <select class="form-select" name="IsPublished" value="@author.IsPublished">
+                                <option value="" selected>-- 請選擇 --</option>
+                                <option value="Public">Public</option>
+                                <option value="Private">Private</option>
+                            </select>
+                            @* <input type="text" class="form-control" name="IsPublished" value="@author.IsPublished"> *@
                         </div>
                     }
                     
