@@ -8,6 +8,9 @@ using 文章寫作平台.Models.Entity;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Farmer_Project.Models.Login;
+using System.Security.Cryptography;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace 文章寫作平台.Controllers
 {
@@ -103,7 +106,7 @@ namespace 文章寫作平台.Controllers
         }
 
         [HttpPost]
-        public IActionResult ArticleAdd(Articles author, string action)
+        public async Task<IActionResult> ArticleAdd(Articles author, string action, string ArticleimagePath, IFormFile? image)
         {
             ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
             TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
@@ -118,12 +121,41 @@ namespace 文章寫作平台.Controllers
 
             try
             {
-                dbmanager.AddMyArticles(author, isPublish, ArticlesCount);   // 此為啟動DBmanager當中的newAccount指令
+                if (image != null)
+                {
+                    // 判斷圖片格式是否有效
+                    if (!IsImageFormat(image))
+                    {
+                        ModelState.AddModelError("image", "請上傳有效的圖片格式（jpg, jpeg, png, gif）");
+                        return View();
+                    }
+
+                    // 計算圖片的 MD5 哈希值
+                    var md5Hash = ComputeMd5Hash(image);
+
+                    // 儲存圖片並取得圖片路徑
+                    string imagePath = await SaveImage(image, md5Hash);
+
+                    // 設定 farmersInfo 的圖片路徑
+                    ArticleimagePath = imagePath;
+                }
+                else
+                {
+                    // 沒有上傳圖片，使用預設圖片路徑
+                    ArticleimagePath = "/images/f-1.jpg";
+                }
+
+
+                ViewBag.Message = "資料儲存成功！";
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
+                ViewBag.Message = "儲存資料發生錯誤，請稍後再試！";
+                return View();
             }
+
+
+            dbmanager.AddMyArticles(author, ArticleimagePath, isPublish, ArticlesCount);   // 此為啟動DBmanager當中的newAccount指令
             return RedirectToAction("MyArticle");  // 此設定為導回 "MyArticle" 的網頁
         }
 
@@ -143,16 +175,50 @@ namespace 文章寫作平台.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished)
+        public async Task<IActionResult> Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished, IFormFile? image)
         {
             if (IsPublished != "Public" || IsPublished != "Private")
             {
                 ViewBag.Msg1 = "必須選擇";
             }
 
+            try
+            {
+                if (image != null)
+                {
+                    // 判斷圖片格式是否有效
+                    if (!IsImageFormat(image))
+                    {
+                        ModelState.AddModelError("image", "請上傳有效的圖片格式（jpg, jpeg, png, gif）");
+                        return View();
+                    }
+
+                    // 計算圖片的 MD5 哈希值
+                    var md5Hash = ComputeMd5Hash(image);
+
+                    // 儲存圖片並取得圖片路徑
+                    string imagePath = await SaveImage(image, md5Hash);
+
+                    // 設定 farmersInfo 的圖片路徑
+                    ArticleImagePath = imagePath;
+                }
+                else
+                {
+                    // 沒有上傳圖片，使用預設圖片路徑
+                    ArticleImagePath = "";
+                }
+
+
+                ViewBag.Message = "資料儲存成功！";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = "儲存資料發生錯誤，請稍後再試！";
+                return View();
+            }
 
             DBmanager dbmanager = new DBmanager();
-            dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary, IsPublished);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
+            dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary, IsPublished, image);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
 
             return RedirectToAction("MyArticle");
         }
@@ -256,7 +322,7 @@ namespace 文章寫作平台.Controllers
                 TempData.Keep();  // 用於讓 TempData 的值保存不刪除
 
                 // RedirectToAction("register", "Login")：表示跳轉至 LoginController 當中的 register.cshtml 頁面
-                return RedirectToAction("Index", "Home"); // * 這裡的register之後要修改為其他人製作的cshtml首頁名稱
+                return RedirectToAction("MemberIndex", "Login"); // * 這裡的register之後要修改為其他人製作的cshtml首頁名稱
             }
             TempData["Message"] = "登入成功\n您的身分為：系統管理者";
 
@@ -292,6 +358,85 @@ namespace 文章寫作平台.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+
+        //------start of 一般方法-------------------------------------------------------------------------------------------------//       
+
+        //判斷圖片格式
+        private bool IsImageFormat(IFormFile image)
+        {
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(image.FileName)?.ToLower();
+            return allowedExtensions.Contains(fileExtension);
+        }
+
+        //圖片內容MD-5編碼
+        private string ComputeMd5Hash(IFormFile image)
+        {
+            //using區塊結束後會釋放MD5占用的資源
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = image.OpenReadStream())  // 讀取檔案流
+                {
+                    byte[] hashBytes = md5.ComputeHash(stream);
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var b in hashBytes)
+                    {
+                        sb.Append(b.ToString("x2")); // 轉換為十六進位格式
+                    }
+                    return sb.ToString();
+                }
+            }
+        }
+
+        //圖片存進wwwroot
+        private async Task<string> SaveImage(IFormFile image, string md5Hash)
+        {
+            //產生一個唯一的圖片檔案名稱，使用 MD5 作為檔名
+            string fileExtension = Path.GetExtension(image.FileName); // 獲取圖片副檔名
+            string fileName = md5Hash + fileExtension;  // 以 MD5 哈希值作為檔名
+
+            //設定儲存路徑 (Directory.GetCurrentDirectory() -返回當前應用程式的根目錄路徑)
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+            // 檢查圖片是否已存在，如果已存在則不儲存並返回現有的檔案名稱
+            if (System.IO.File.Exists(filePath))
+            {
+                return "/images/" + fileName;  // 返回現有圖片的路徑
+            }
+
+            // 儲存檔案 
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream); // 複製圖片資料到伺服器
+            }
+            return "/images/" + fileName; ;
+        }
+
+        // 定義中文到英文的映射
+        private string TransDictionary(string input)
+        {
+            // 如果是英文，直接返回
+            if (input.All(c => char.IsLetter(c) && char.IsAscii(c)))
+            {
+                return input;
+            }
+
+            var translateDict = new Dictionary<string, string>
+            {
+                { "咖啡", "Coffee" },
+                { "芒果", "Mango" }
+            };
+
+            // 如果字典中有對應的中文，則返回對應的英文，否則返回原始的中文
+            if (translateDict.TryGetValue(input, out var translated))
+            {
+                return translated;
+            }
+
+            return input;
         }
     }
 }

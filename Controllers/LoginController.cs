@@ -8,6 +8,7 @@ using Farmer_Project.Models.Login;
 using System.Security.Cryptography;
 using System.Text;
 using 文章寫作平台.Models.Entity;
+using Farmer_Project.Models.Entity;
 
 namespace Farmer_Project.Controllers
 {
@@ -224,8 +225,83 @@ namespace Farmer_Project.Controllers
         }
         // 結束
 
-        
-        
-        
+
+        [HttpGet]
+        public IActionResult MemberIndex(string keyword)
+        {
+            ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
+
+            if (TempData["Account"].ToString() == "未登入" || TempData["Account"].ToString() == "")
+            {
+                TempData["Message"] = "您前面已經登出，請重新登入！";
+                return RedirectToAction("login", "Home");
+            }
+            TempData["Account"] = TempData["Account"];
+            TempData["Login"] = "/Login/MemberIndex";
+
+            TempData.Keep("Account");  // 用於讓 TempData 的值保存不刪除
+            TempData.Keep("Login");  // 用於讓 TempData 的值保存不刪除
+
+
+            // 抓取已儲存於資料庫的文章資料
+            DBmanager dbmanager = new DBmanager();
+
+            if (string.IsNullOrEmpty(keyword))    // 若沒有搜尋關鍵字的狀況
+            {
+                List<Articles> Articles = dbmanager.getArticles();
+                ViewBag.Articles = Articles;
+
+                return View(Articles);
+            }
+            string author = "";
+            List<Articles> SearchArticles = dbmanager.SearchArticles(author, keyword);    //抓取特定的資料並存放於此變數
+            ViewBag.Articles = SearchArticles;   //顯示資料
+
+            return View(SearchArticles);
+        }
+
+
+        public IActionResult MemberEdit(int id)
+        {
+            ViewData["BodyClass"] = "sub_page";
+            TempData.Remove("Message");
+
+            TempData["Login"] = TempData["Login"];  // 確認會員身分後設定回到哪個首頁
+            TempData["Account"] = TempData["Account"];
+            TempData["Account_Ref"] = TempData["Account_Ref"];
+
+            TempData["isLogin1"] = TempData["isLogin1"];
+            TempData["isLogin2"] = TempData["isLogin2"];
+            TempData["isLogin3"] = TempData["isLogin3"];
+
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
+
+            if (TempData["Account"].ToString() == "未登入" || TempData["Account"].ToString() == "")
+            {
+                TempData["Message"] = "您前面已經登出，請重新登入！";
+                return RedirectToAction("login", "Home");
+            }
+            TempData["Login"] = TempData["Login"];
+            TempData["Account"] = TempData["Account"];
+            TempData["Account_Ref"] = TempData["Account_Ref"];
+
+            TempData["isLogin1"] = TempData["isLogin1"];
+            TempData["isLogin2"] = TempData["isLogin2"];
+            TempData["isLogin3"] = TempData["isLogin3"];
+
+            //var member = _DbContext.MemberInformation.FirstOrDefault(m => m.NickName == TempData["Account"].ToString());
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
+
+            DBmanager dbmanager = new DBmanager();
+            //List<login> member = dbmanager.searchAccounts(id);   // 用於將指定的資料抓出來
+
+            //if (member == null)
+            //{
+            //    ViewBag.Message = "找不到該會員資料";
+            //    return RedirectToAction("login", "Home");
+            //}
+            return View();  // 返回編輯頁面並傳遞會員資料
+        }
+
     }
 }

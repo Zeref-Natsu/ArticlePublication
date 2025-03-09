@@ -57,7 +57,8 @@
             <h2 style="text-align:center;vertical-align:middle;"> 編輯文章 </h2>
             <hr />
 
-            <form method="post" action="@Url.Action("Update", "Home")">   @* 這裡可以將以下的資料上報到HomeController的Update *@
+            <form method="post" action="/Home/Update" enctype="multipart/form-data">  @* enctype="multipart/form-data" 用於讓圖片成功讀取*@
+                @* 這裡可以將以下的資料上報到HomeController的Update *@
                 <div class="rounded-3 bg-light p-3 shadow mb-3">
                     <input type="hidden" name="FarmersId" value="" />
                     @foreach (var author in Articles)
@@ -88,8 +89,8 @@
 
                         <!-- 文章圖片 -->
                         <div class="mb-3">
-                            <label for="Articles.ArticleImage" class="form-label">文章圖片</label>
-                            <input type="file" class="form-control" name="ArticleImagePath" value="@author.ArticleImagePath">
+                            <label for="Image" class="form-label">文章圖片</label>
+                            <input type="file" class="form-control" name="Image" value="@author.ArticleImagePath">
                         </div>
 
                         <!-- 文章簡介 -->

@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Security.Cryptography;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace 文章寫作平台.Models.Entity
 {
@@ -197,7 +198,7 @@ namespace 文章寫作平台.Models.Entity
         }
 
         // 新增自己的文章評論
-        public void AddMyArticles(Articles author, bool isPublish, int ArticlesCount)
+        public void AddMyArticles(Articles author, string ArticleimagePath, bool isPublish, int ArticlesCount)
         {
             SqlConnection sqlconnection = new SqlConnection(connStr);
             SqlCommand sqlcommand = new SqlCommand($@"INSERT INTO WebArticle(Number,Author,Article,ArticleType,ArticleImagePath,ArticleSummary,IsPublished,CreatedDate) VALUES(@Number,@Author,N'{author.Article}',N'{author.ArticleType}',@ArticleImagePath,N'{author.ArticleSummary}',@IsPublished,@CreatedDate)");
@@ -207,7 +208,7 @@ namespace 文章寫作平台.Models.Entity
             sqlcommand.Parameters.Add(new SqlParameter("@Author", "KEN"));
             //sqlcommand.Parameters.Add(new SqlParameter("@Article", "test"));
             //sqlcommand.Parameters.Add(new SqlParameter("@ArticleType", author.ArticleType));
-            sqlcommand.Parameters.Add(new SqlParameter("@ArticleImagePath", ""));
+            sqlcommand.Parameters.Add(new SqlParameter("@ArticleImagePath", $"{ArticleimagePath}"));
             //sqlcommand.Parameters.Add(new SqlParameter("@ArticleSummary", author.ArticleSummary));
             if (isPublish)
             {
@@ -262,7 +263,7 @@ namespace 文章寫作平台.Models.Entity
             return Articles;
         }
         // 2. 最後將現在的資料更新至資料表
-        public void UpdateMyArticles(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished)
+        public void UpdateMyArticles(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary, string IsPublished, IFormFile?  image)
         {
             SqlConnection sqlconnection = new SqlConnection(connStr);
             SqlCommand sqlcommand = new SqlCommand($@"Update WebArticle SET Article=N'{Article}', ArticleType=N'{ArticleType}', ArticleImagePath=N'{ArticleImagePath}', ArticleSummary=N'{ArticleSummary}', IsPublished=N'{IsPublished}' where Author='KEN' and Number={Number}");
@@ -386,46 +387,6 @@ namespace 文章寫作平台.Models.Entity
             // 結束
 
             return accounts;
-
-
-            //// 將新密碼使用 SHA256 雜湊運算(不可逆)
-            ////string salt = userPasswd.passwd.ToString().Substring(0, 1).ToLower(); //使用帳號前一碼當作密碼鹽
-            //SHA256 sha256 = SHA256.Create();
-            //byte[] bytes = Encoding.UTF8.GetBytes(member.passwd); //將密碼鹽及新密碼組合
-            //byte[] hash = sha256.ComputeHash(bytes);
-            //StringBuilder result = new StringBuilder();
-            //for (int i = 0; i < hash.Length; i++)
-            //{
-            //    result.Append(hash[i].ToString("X2"));
-            //}
-            //string NewPwd = result.ToString(); // 雜湊運算後密碼
-            //// 結束
-
-            //List<login> accounts = new List<login>();
-            //SqlConnection sqlConnection = new SqlConnection(connStr);
-            //SqlCommand sqlCommand = new SqlCommand($"SELECT * FROM memberInformation where account ='{member.account}' and passwd = '{NewPwd}'");
-            //sqlCommand.Connection = sqlConnection;
-            //sqlConnection.Open();
-
-            //SqlDataReader reader = sqlCommand.ExecuteReader();
-            //if (reader.HasRows)
-            //{
-            //    while (reader.Read())
-            //    {
-            //        login account = new login
-            //        {
-            //            account = reader.GetString(reader.GetOrdinal("account")),
-            //            passwd = reader.GetString(reader.GetOrdinal("passwd"))
-            //        };
-            //        accounts.Add(account);
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("資料庫為空！");
-            //}
-            //sqlConnection.Close();
-            //return accounts;
         }
         // 結束
 
@@ -549,49 +510,5 @@ namespace 文章寫作平台.Models.Entity
             return accounts;
         }
 
-
-
-        //public List<string> loginAccounts(login member)
-        //{
-        //    // 將新密碼使用 SHA256 雜湊運算(不可逆)
-        //    SHA256 sha256 = SHA256.Create();
-        //    byte[] bytes = Encoding.UTF8.GetBytes(member.passwd); //將密碼鹽及新密碼組合
-        //    byte[] hash = sha256.ComputeHash(bytes);
-        //    StringBuilder result = new StringBuilder();
-        //    for (int i = 0; i < hash.Length; i++)
-        //    {
-        //        result.Append(hash[i].ToString("X2"));
-        //    }
-
-        //    string NewPwd = result.ToString(); // 雜湊運算後密碼
-        //    // 結束
-
-        //    List<string> accounts = new List<string>();
-
-        //    // 查詢資料庫指定內容［設定 "一般會員" 與 "管理者" 兩個部分］
-        //    // 第一步驟：確認輸入的帳號是否存在
-        //    var Account = _DbContext.MemberInformation.Where(M => M.Account == $"{member.account}").ToList();
-        //    if (Account.Count != 0)
-        //    {
-        //        accounts.Add("0");
-        //    }
-
-        //    // 第二步驟：確認
-        //    // ［一般會員］
-        //    var posts = _DbContext.MemberInformation.Where(M => M.Account == $"{member.account}" && M.Passwd == $"{NewPwd}" && M.Sort == "0").ToList();
-        //    // ［管理者］
-        //    var posts_manager = _DbContext.MemberInformation.Where(M => M.Account == $"{member.account}" && M.Passwd == $"{NewPwd}" && M.Sort == "1").ToList();
-        //    // 結束
-
-        //    if (posts.Count != 0)   // 這裡將變數 "posts" 轉換成List，藉此計算是否有抓到資料
-        //    {
-        //        accounts.Add("1");
-        //    }
-        //    if (posts_manager.Count != 0)
-        //    {
-        //        accounts.Add("2");
-        //    }
-        //    return accounts;
-        //}
     }
 }
