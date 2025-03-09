@@ -99,15 +99,17 @@ namespace 文章寫作平台.Controllers
             TempData.Keep();  // 用於讓 TempData 的值保存不刪除
 
             DBmanager dbmanager = new DBmanager();
-            List<Articles> Articles = dbmanager.EditMyArticles(id);
+            List<Articles> Articles = dbmanager.EditMyArticles(id);   // 用於將指定的資料抓出來
             ViewBag.Articles = Articles;
 
             return View(Articles);
         }
 
         [HttpPost]
-        public IActionResult Update(int Article, string nickName, string passwd)
+        public IActionResult Update(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary)
         {
+            DBmanager dbmanager = new DBmanager();
+            dbmanager.UpdateMyArticles(Number, Article, ArticleType, ArticleImagePath, ArticleSummary);    // 此用於對 DBmanager 的 UpdateMyArticles 下達更新指令
 
             return RedirectToAction("MyArticle");
         }

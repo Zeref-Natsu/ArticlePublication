@@ -138,6 +138,7 @@ namespace 文章寫作平台.Models.Entity
         }
 
         // 編輯修改自己的評論
+        // 1. 首先將文章的資料送到編輯畫面
         public List<Articles>EditMyArticles(int Number)
         {
             List<Articles> Articles = new List<Articles>();
@@ -172,6 +173,18 @@ namespace 文章寫作平台.Models.Entity
             sqlConnection.Close();
             return Articles;
         }
+        // 2. 最後將現在的資料更新至資料表
+        public void UpdateMyArticles(int Number, string Article, string ArticleType, string ArticleImagePath, string ArticleSummary)
+        {
+            SqlConnection sqlconnection = new SqlConnection(connStr);
+            SqlCommand sqlcommand = new SqlCommand($@"Update WebArticle SET Article=N'{Article}', ArticleType=N'{ArticleType}', ArticleImagePath=N'{ArticleImagePath}', ArticleSummary=N'{ArticleSummary}' where Author='KEN' and Number={Number}");
+            sqlcommand.Connection = sqlconnection;
+            sqlconnection.Open();
+
+            sqlcommand.ExecuteNonQuery();
+            sqlconnection.Close();
+        }
+
 
         // 刪除自己的評論
         public void DeleteMyArticles(int Number)

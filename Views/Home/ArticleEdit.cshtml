@@ -54,14 +54,18 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h2 style="text-align:center;vertical-align:middle;"> 新增文章 </h2>
+            <h2 style="text-align:center;vertical-align:middle;"> 編輯文章 </h2>
             <hr />
 
-            <form class="form rounded" asp-action="ArticleEdit" method="post" enctype="multipart/form-data">
+            <form method="post" action="@Url.Action("Update", "Home")">
                 <div class="rounded-3 bg-light p-3 shadow mb-3">
                     <input type="hidden" name="FarmersId" value="" />
                     @foreach (var author in Articles)
                     {
+                        <div class="mb-3">
+                            <label for="Articles.ArticleTitle" class="form-label">文章號碼</label>
+                            <input type="text" class="form-control" name="Number" value="@author.Number" required readonly>
+                        </div>
                         <!-- 文章標題 -->
                         <div class="mb-3">
                             <label for="Articles.ArticleTitle" class="form-label">文章標題</label>
@@ -100,7 +104,7 @@
 
                 <br />
 
-                <button type="submit" class="btn btn-primary">更新</button>
+                <button type="submit" class="btn btn-primary" >更新</button>
 
             </form>
 
