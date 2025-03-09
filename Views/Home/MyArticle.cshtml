@@ -34,6 +34,10 @@
                                 <a class="nav-link" href="@TempData["Account_Ref"]">@TempData["Account"]</a>
                             </li>
                         </ul>
+                        <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <input class="form-control" type="text" placeholder="Search" name="keyword">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </form>
                     </div>
                 </div>
             </nav>
@@ -45,41 +49,51 @@
     <form method="post" action="@Url.Action("ReloadData", "Home")">  @* 若沒有這一行指令，下方的按鈕網址就無法執行 *@
         <table class="table table-striped">
             <tbody>
-                @foreach (var author in Articles)
+                @if (Articles.Any())
+                {
+                    foreach (var author in Articles)
+                    {
+                        <tr>
+                            <td width="5" align="left">
+                                <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                            </td>
+                            <td width="10" align="left">@author.Number</td>
+                            <td width="5" align="left">
+                                <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                            </td>
+                            <td width="500" align="center">
+                                <h1>
+                                    <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                                        @author.Article
+                                    </a>
+                                </h1>
+                            </td>
+                            <td width="800" align="left">
+                                <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                                    【@author.ArticleType】@author.ArticleSummary
+                                </a>
+                                <br>
+                                <small>板主：@author.Author</small>
+                                <br>
+                                <small>@author.IsPublished</small>
+                            </td>
+                            <td width="10" align="left">
+                                <!-- 編輯操作 -->
+                                <button type="submit" name="action" value="edit" class="btn btn-sm btn-warning" formaction="@Url.Action("ArticleEdit", "Home", new { id = author.Number })">編輯</button>
+
+                                <!-- 刪除操作 -->
+                                <button type="submit" class="btn btn-sm btn-danger delete-btn" formaction="@Url.Action("Delete", "Home", new { id = author.Number })">刪除</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td width="5" align="left">
-                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                        </td>
-                        <td width="10" align="left">@author.Number</td>
-                        <td width="5" align="left">
-                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                        </td>
-                        <td width="500" align="center">
-                            <h1>
-                                <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
-                                    @author.Article
-                                </a>
-                            </h1>
-                        </td>
-                        <td width="800" align="left">
-                            <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
-                                【@author.ArticleType】@author.ArticleSummary
-                            </a>
-                            <br>
-                            <small>板主：@author.Author</small>
-                            <br>
-                            <small>@author.IsPublished</small>
-                        </td>
-                        <td width="10" align="left">
-                            <!-- 編輯操作 -->
-                            <button type="submit" name="action" value="edit" class="btn btn-sm btn-warning" formaction="@Url.Action("ArticleEdit", "Home", new { id = author.Number })">編輯</button>
-
-                            <!-- 刪除操作 -->
-                            <button type="submit" class="btn btn-sm btn-danger delete-btn" formaction="@Url.Action("Delete", "Home", new { id = author.Number })">刪除</button>
-                        </td>
+                        <td colspan="5" class="text-center">沒有資料可顯示。</td>
                     </tr>
                 }
+                
             </tbody>
         </table>
     </form>

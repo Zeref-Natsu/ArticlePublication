@@ -106,7 +106,55 @@ namespace 文章寫作平台.Models.Entity
             return Articles;
         }
 
+        // 抓取索引的文章
+        public List<Articles> SearchArticles(string author, string keyword)
+        {
+            List<Articles> SearchArticles = new List<Articles>();
+            SqlConnection sqlConnection = new SqlConnection(connStr);
 
+            SqlCommand sqlCommand = new SqlCommand();
+
+            // 確認是否為全部或我的文章
+            if (author == "")
+            {
+                sqlCommand = new SqlCommand($@"SELECT * FROM WebArticle where Article=N'{keyword}' or ArticleType=N'{keyword}' or ArticleSummary=N'{keyword}'order by Number asc");
+            }
+            else
+            {
+                sqlCommand = new SqlCommand($@"SELECT * FROM WebArticle where author=N'{author}' and (Article=N'{keyword}' or ArticleType=N'{keyword}' or ArticleSummary=N'{keyword}') order by Number asc");
+            }
+
+            
+            sqlCommand.Connection = sqlConnection;
+            sqlConnection.Open();
+
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Articles SearchArticle = new Articles
+                    {
+                        Number = reader.GetInt32(reader.GetOrdinal("Number")),   // 這個欄位的屬性要設定為"int"
+                        Author = reader.GetString(reader.GetOrdinal("Author")),
+                        Article = reader.GetString(reader.GetOrdinal("Article")),
+                        ArticleType = reader.GetString(reader.GetOrdinal("ArticleType")),
+                        ArticleImagePath = reader.GetString(reader.GetOrdinal("ArticleImagePath")),
+                        ArticleSummary = reader.GetString(reader.GetOrdinal("ArticleSummary")),
+                        IsPublished = reader.GetString(reader.GetOrdinal("IsPublished")),
+                    };
+                    SearchArticles.Add(SearchArticle);
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("資料庫為空！");
+            }
+            sqlConnection.Close();
+
+            return SearchArticles;
+        }
 
         // 新增自己的文章評論
         public void AddMyArticles(Articles author, bool isPublish, int ArticlesCount)

@@ -36,6 +36,10 @@
                                 <a class="nav-link" href="@TempData["Account_Ref"]">@TempData["Account"]</a>
                             </li>
                         </ul>
+                        <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                            <input class="form-control" type="text" placeholder="Search" name="keyword">
+                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                        </form>
                     </div>
                 </div>
             </nav>
@@ -46,32 +50,42 @@
 <div class="text-center">
     <table class="table">
         <tbody>
-            @foreach (Articles author in Articles)
+            @if (Articles.Any())
+            {
+                @foreach (Articles author in Articles)
+                {
+                    <tr>
+                        <td width="5" align="left">
+                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                        </td>
+                        <td width="10" align="left">@author.Number</td>
+                        <td width="5" align="left">
+                            <img src="https://i2.bahamut.com.tw/icon_stop.gif">
+                        </td>
+                        <td width="500" align="center">
+                            <h1>
+                                <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
+                                    @author.Article
+                                </a>
+                            </h1>
+                        </td>
+                        <td width="1000" align="left">
+                            <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
+                                【@author.ArticleType】@author.ArticleSummary
+                            </a>
+                            <br>
+                            <small>板主：@author.Author</small>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td width="5" align="left">
-                        <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                    </td>
-                    <td width="10" align="left">@author.Number</td>
-                    <td width="5" align="left">
-                        <img src="https://i2.bahamut.com.tw/icon_stop.gif">
-                    </td>
-                    <td width="500" align="center">
-                        <h1>
-                            <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊哈啦板" href="A.php?bsn=5786">
-                                @author.Article
-                            </a>
-                        </h1>
-                    </td>
-                    <td width="1000" align="left">
-                        <a data-gtm-page="熱門哈啦區" data-gtm-area="主要列表" data-gtm-service="forum" data-gtm-link-click="點擊文章" href="C.php?bsn=5786&amp;snA=172654">
-                            【@author.ArticleType】@author.ArticleSummary
-                        </a>
-                        <br>
-                        <small>板主：@author.Author</small>
-                    </td>
+                    <td colspan="5" class="text-center">沒有資料可顯示。</td>
                 </tr>
             }
+            
         </tbody>
     </table>
 </div>

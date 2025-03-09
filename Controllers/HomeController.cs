@@ -5,6 +5,8 @@ using Farmer_Project.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
 using 文章寫作平台.Models;
 using 文章寫作平台.Models.Entity;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace 文章寫作平台.Controllers
 {
@@ -17,37 +19,51 @@ namespace 文章寫作平台.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string keyword)
         {
             ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
             TempData["Account"] = "未登入";  // 顯示是否有登入，有的話顯示登入的帳號
             TempData["Account_Ref"] = "/Home/login";   // 設定 "登入" 連結的路徑
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
 
             // 抓取已儲存於資料庫的文章資料
             DBmanager dbmanager = new DBmanager();
-            List<Articles> Articles = dbmanager.getArticles();
-            ViewBag.Articles = Articles;
-            // 完成
 
-            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
-            return View();
+            if (string.IsNullOrEmpty(keyword))    // 若沒有搜尋關鍵字的狀況
+            {
+                List<Articles> Articles = dbmanager.getArticles();
+                ViewBag.Articles = Articles;
+
+                return View(Articles);
+            }
+            string author = "";
+            List<Articles> SearchArticles = dbmanager.SearchArticles(author,keyword);    //抓取特定的資料並存放於此變數
+            ViewBag.Articles = SearchArticles;   //顯示資料
+
+            return View(SearchArticles);
         }
 
-        public IActionResult MyArticle()
+        public IActionResult MyArticle(string keyword)
         {
             ViewData["BodyClass"] = "sub_page";   // 此用於頁面上出現個空白框
             TempData["Account"] = TempData["Account"];  // 顯示是否有登入，有的話顯示登入的帳號
             TempData["Account_Ref"] = TempData["Account_Ref"];
+            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
 
             DBmanager dbmanager = new DBmanager();
-            List<Articles> Articles = dbmanager.getMyArticles();
-            ViewBag.Articles = Articles;
 
-            //TempData["isLogin1"] = "生活";
-            //TempData["isLogin2"] = "娛樂";
-            //TempData["isLogin3"] = "企業";
-            TempData.Keep();  // 用於讓 TempData 的值保存不刪除
-            return View();
+            if (string.IsNullOrEmpty(keyword))    // 若沒有搜尋關鍵字的狀況
+            {
+                List<Articles> Articles = dbmanager.getMyArticles();
+                ViewBag.Articles = Articles;
+
+                return View(Articles);
+            }
+            string author = "KEN";
+            List<Articles> SearchArticles = dbmanager.SearchArticles(author, keyword);    //抓取特定的資料並存放於此變數
+            ViewBag.Articles = SearchArticles;   //顯示資料
+
+            return View(SearchArticles);
         }
 
 
